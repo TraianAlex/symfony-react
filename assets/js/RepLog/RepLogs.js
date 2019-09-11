@@ -14,18 +14,21 @@ function calculateTotalWeightLifted(repLogs) {
 const calculateTotalWeightFancier = repLogs => repLogs.reduce((total, log) => total + log.totalWeightLifted, 0);
 
 export default function RepLogs(props) {
-    const { withHeart, highlightedRowId, onRowClick, repLogs, onAddRepLog } = props;
+    const { withHeart, highlightedRowId, onRowClick, repLogs, onAddRepLog, numberOfHearts, onHeartChange } = props;
 
     let hearth = '';
     if (withHeart) {
-        hearth = <span>❤️</span>;
+        hearth = <span>️{'❤️'.repeat(numberOfHearts)}</span>;
     }
 
     return (
         <div className="col-md-7">
-            <h2>
-                Lift History! {hearth}
-            </h2>
+            <h2>Lift History! {hearth}</h2>
+            <input type="range" value={numberOfHearts}
+                   onChange={(e) => {
+                        onHeartChange(+e.target.value);
+                    }}
+            />
 
             <table className="table table-striped">
                 <thead>
@@ -51,9 +54,13 @@ export default function RepLogs(props) {
                 </tfoot>
             </table>
 
-            <RepLogCreator
-                onAddRepLog={onAddRepLog}
-            />
+            <div className="row">
+                <div className="col-md-6">
+                    <RepLogCreator
+                        onAddRepLog={onAddRepLog}
+                    />
+                </div>
+            </div>
         </div>
     );
 }
@@ -63,5 +70,7 @@ RepLogs.propTypes = {
     highlightedRowId: PropTypes.any,
     onRowClick: PropTypes.func.isRequired,
     onAddRepLog: PropTypes.func.isRequired,
+    onHeartChange: PropTypes.func.isRequired,
     repLogs: PropTypes.array.isRequired,
+    numberOfHearts: PropTypes.number.isRequired,
 };

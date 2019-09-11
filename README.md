@@ -80,4 +80,4 @@ open an issue or message us.
 <3 Your friends at KnpUniversity
 ron_furgandy pumpup
 Ctrl Cmd Space emoji menu
--> cap 12
+-> cap 24]
