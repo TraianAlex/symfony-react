@@ -1,6 +1,7 @@
 {
   "devDependencies": {
     "@symfony/webpack-encore": "^0.19.0",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "babel-preset-react": "^6.24.1",
     "bootstrap": "3",
     "copy-webpack-plugin": "^4.4.1",
@@ -14,6 +15,7 @@
     "react-dom": "^16.8.6",
     "sass-loader": "^6.0.6",
     "sweetalert2": "^7.11.0",
+    "uuid": "^3.3.3",
     "webpack-notifier": "^1.5.1"
   },
   "scripts": {
