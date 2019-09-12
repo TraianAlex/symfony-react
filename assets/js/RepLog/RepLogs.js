@@ -2,6 +2,7 @@ import React from 'react';
 import RepLogList from "./RepLogList";
 import PropTypes from 'prop-types';
 import RepLogCreator from './RepLogCreator';
+//import RepLogCreator from './RepLogCreatorControlledComponents';
 
 function calculateTotalWeightLifted(repLogs) {
     let total = 0;
@@ -14,7 +15,8 @@ function calculateTotalWeightLifted(repLogs) {
 const calculateTotalWeightFancier = repLogs => repLogs.reduce((total, log) => total + log.totalWeightLifted, 0);
 
 export default function RepLogs(props) {
-    const { withHeart, highlightedRowId, onRowClick, repLogs, onAddRepLog, numberOfHearts, onHeartChange } = props;
+    const { withHeart, highlightedRowId, onRowClick, repLogs, onAddRepLog, numberOfHearts, onHeartChange,
+        onDeleteRepLog, isLoaded } = props;
 
     let hearth = '';
     if (withHeart) {
@@ -43,6 +45,8 @@ export default function RepLogs(props) {
                     highlightedRowId={highlightedRowId}
                     onRowClick={onRowClick}
                     repLogs={repLogs}
+                    onDeleteRepLog={onDeleteRepLog}
+                    isLoaded={isLoaded}
                 />
                 <tfoot>
                 <tr>
@@ -71,6 +75,8 @@ RepLogs.propTypes = {
     onRowClick: PropTypes.func.isRequired,
     onAddRepLog: PropTypes.func.isRequired,
     onHeartChange: PropTypes.func.isRequired,
+    onDeleteRepLog: PropTypes.func.isRequired,
     repLogs: PropTypes.array.isRequired,
     numberOfHearts: PropTypes.number.isRequired,
+    isLoaded: PropTypes.bool.isRequired,
 };

@@ -2,7 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export default function RepLogList(props) {
-    const { highlightedRowId, onRowClick, repLogs } = props;
+    const { highlightedRowId, onRowClick, repLogs, onDeleteRepLog, isLoaded } = props;
+
+    const handleDeleteClick = function(event, repLogId) {
+        event.preventDefault();
+        onDeleteRepLog(repLogId);
+    };
+
+    if (!isLoaded) {
+        return (
+            <tbody>
+            <tr>
+                <td colSpan="4" className="text-center">Loading...</td>
+            </tr>
+            </tbody>
+        );
+    }
 
     return (
         <tbody>
@@ -16,7 +31,11 @@ export default function RepLogList(props) {
                 <td>{repLog.itemLabel}</td>
                 <td>{repLog.reps}</td>
                 <td>{repLog.totalWeightLifted}</td>
-                <td>...</td>
+                <td>
+                    <a href="#" onClick={(event) => handleDeleteClick(event, repLog.id) }>
+                        <span className="fa fa-trash"></span>
+                    </a>
+                </td>
             </tr>
         ))}
         </tbody>
@@ -26,7 +45,9 @@ export default function RepLogList(props) {
 RepLogList.propTypes = {
     highlightedRowId: PropTypes.any,
     onRowClick: PropTypes.func.isRequired,
-    repLogs: PropTypes.array.isRequired
+    onDeleteRepLog: PropTypes.func.isRequired,
+    repLogs: PropTypes.array.isRequired,
+    isLoaded: PropTypes.bool.isRequired,
 };
 
 // export default class RepLogList extends Component {
