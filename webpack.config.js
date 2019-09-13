@@ -9,7 +9,6 @@ Encore
     .setPublicPath('/build')
 
     .createSharedEntry('layout', './assets/js/layout.js')
-    .addEntry('rep_log', './assets/js/rep_log.js')
     .addEntry('rep_log_react', './assets/js/rep_log_react.js')
     .addEntry('login', './assets/js/login.js')
 
@@ -33,6 +32,7 @@ Encore
                 'transform-react-remove-prop-types'
             );
         }
+        babelConfig.plugins.push('transform-object-rest-spread');
     })
 ;
 

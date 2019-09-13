@@ -10,9 +10,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use App\Api\ApiRoute;
 
 /**
  * @IsGranted("ROLE_USER")
+ * @ApiRoute()
  */
 class RepLogController extends BaseController
 {

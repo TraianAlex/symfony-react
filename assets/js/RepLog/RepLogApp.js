@@ -23,7 +23,19 @@ export default class RepLogApp extends Component {
             repLogs: [],
             numberOfHearts: 1,
             isLoaded: false,
+            isSavingNewRepLog: false,
+            successMessage: '',
+            newRepLogValidationErrorMessage: '',
+            // itemOptions: [
+            //     { id: 'cat', text: 'Cat' },
+            //     { id: 'fat_cat', text: 'Big Fat Cat' },
+            //     { id: 'laptop', text: 'My Laptop' },
+            //     { id: 'coffee_cup', text: 'Coffee Cup' },
+            //     { id: 'invalid_item', text: 'Dark Matter' }
+            // ],
         };
+
+        this.successMessageTimeoutHandle = 0;
 
         this.handleRowClick = this.handleRowClick.bind(this);
         this.handleAddRepLog = this.handleAddRepLog.bind(this);
@@ -36,9 +48,13 @@ export default class RepLogApp extends Component {
             .then((data) => {
                 this.setState({
                     repLogs: data,
-                    isLoaded: true
+                    isLoaded: true,
                 })
             });
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.successMessageTimeoutHandle);
     }
 
     handleRowClick(repLogId) {
@@ -53,14 +69,55 @@ export default class RepLogApp extends Component {
             item: item,
             //totalWeightLifted: Math.floor(Math.random() * 50)
         };
+
+        this.setState({
+            isSavingNewRepLog: true
+        });
+
+        const newState = {
+            isSavingNewRepLog: false,
+        };
+
         createRepLog(newRep)
             .then(repLog => {
                 this.setState(prevState => {
                     const newRepLogs = [...prevState.repLogs, repLog];
-                    return {repLogs: newRepLogs};
+
+                    // return Object.assign({
+                    //     repLogs: newRepLogs,
+                    //     newRepLogValidationErrorMessage: '',
+                    // }, newState);
+                    return {
+                        ...newState,
+                        repLogs: newRepLogs,
+                        newRepLogValidationErrorMessage: '',
+                    }
+
+                    // return {
+                    //     repLogs: newRepLogs,
+                    //     isSavingNewRepLog: false,
+                    //     newRepLogValidationErrorMessage: '',
+                    //     //successMessage: 'Rep Log Saved!'
+                    // };
                 });
+                this.setSuccessMessage('Rep Log Saved!');
             })
-        ;
+            .catch(error => {
+                //console.log(error.response);
+                error.response.json().then(errorsData => {
+                    //console.log(errorsData);
+                    const errors = errorsData.errors;
+                    const firstError = errors[Object.keys(errors)[0]];
+
+                    // this.setState(Object.assign({
+                    //     newRepLogValidationErrorMessage: firstError
+                    // }, newState));
+                    this.setState({
+                        ...newState,
+                        newRepLogValidationErrorMessage: firstError
+                    });
+                })
+            });
         //repLogs.push(newRep);
         //const newRepLogs = [...this.state.repLogs, newRep];
         //this.setState({repLogs: repLogs});
@@ -72,6 +129,19 @@ export default class RepLogApp extends Component {
         // });
     }
 
+    setSuccessMessage(message) {
+        this.setState({
+            successMessage: message
+        });
+        clearTimeout(this.successMessageTimeoutHandle);
+        this.successMessageTimeoutHandle = setTimeout(() => {
+            this.setState({
+                successMessage: ''
+            });
+            this.successMessageTimeoutHandle = 0;
+        }, 3000);
+    }
+
     handleHeartChange(heartCount) {
         this.setState({
             numberOfHearts: heartCount
@@ -79,17 +149,37 @@ export default class RepLogApp extends Component {
     }
 
     handleDeleteRepLog(id) {
-        deleteRepLog(id);
+        this.setState((prevState) => {
+            return {
+                repLogs: prevState.repLogs.map(repLog => {
+                   if (repLog.id !== id) {
+                       return repLog;
+                   }
+                   //return Object.assign({}, repLog, {isDeleting: true});
+                    return {...repLog, isDeleting: true};
+                })
+            }
+        });
+        //return;
+        deleteRepLog(id)
+            .then(() => {
+                this.setState((prevState) => {
+                    return {
+                        repLogs: prevState.repLogs.filter(repLog => repLog.id !== id)
+                    };
+                });
+                this.setSuccessMessage('Item was Un-lifted!');
+            });
         // remove the rep log without mutating state
         // filter returns a new array
         // this.setState({
         //     repLogs: this.state.repLogs.filter(repLog => repLog.id !== id)}
         // );
-        this.setState((prevState) => {
-            return {
-                repLogs: prevState.repLogs.filter(repLog => repLog.id !== id)
-            };
-        });
+        // this.setState((prevState) => {
+        //     return {
+        //         repLogs: prevState.repLogs.filter(repLog => repLog.id !== id)
+        //     };
+        // });
     }
 
     render() {
@@ -114,4 +204,9 @@ export default class RepLogApp extends Component {
 
 RepLogApp.propTypes = {
     withHeart: PropTypes.bool,
+    itemOptions: PropTypes.array,
+};
+
+RepLogApp.defaultProps = {
+    itemOptions: []
 };

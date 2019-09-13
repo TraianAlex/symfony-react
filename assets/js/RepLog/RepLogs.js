@@ -16,7 +16,8 @@ const calculateTotalWeightFancier = repLogs => repLogs.reduce((total, log) => to
 
 export default function RepLogs(props) {
     const { withHeart, highlightedRowId, onRowClick, repLogs, onAddRepLog, numberOfHearts, onHeartChange,
-        onDeleteRepLog, isLoaded } = props;
+        onDeleteRepLog, isLoaded, isSavingNewRepLog, successMessage, newRepLogValidationErrorMessage,
+        itemOptions } = props;
 
     let hearth = '';
     if (withHeart) {
@@ -24,13 +25,19 @@ export default function RepLogs(props) {
     }
 
     return (
-        <div className="col-md-7">
+        <div>
             <h2>Lift History! {hearth}</h2>
             <input type="range" value={numberOfHearts}
                    onChange={(e) => {
                         onHeartChange(+e.target.value);
                     }}
             />
+
+            {successMessage && (
+                <div className="alert alert-success text-center">
+                    {successMessage}
+                </div>
+            )}
 
             <table className="table table-striped">
                 <thead>
@@ -47,6 +54,7 @@ export default function RepLogs(props) {
                     repLogs={repLogs}
                     onDeleteRepLog={onDeleteRepLog}
                     isLoaded={isLoaded}
+                    isSavingNewRepLog={isSavingNewRepLog}
                 />
                 <tfoot>
                 <tr>
@@ -62,6 +70,8 @@ export default function RepLogs(props) {
                 <div className="col-md-6">
                     <RepLogCreator
                         onAddRepLog={onAddRepLog}
+                        validationErrorMessage={newRepLogValidationErrorMessage}
+                        itemOptions={itemOptions}
                     />
                 </div>
             </div>
@@ -79,4 +89,8 @@ RepLogs.propTypes = {
     repLogs: PropTypes.array.isRequired,
     numberOfHearts: PropTypes.number.isRequired,
     isLoaded: PropTypes.bool.isRequired,
+    isSavingNewRepLog: PropTypes.bool.isRequired,
+    successMessage: PropTypes.string.isRequired,
+    newRepLogValidationErrorMessage: PropTypes.string.isRequired,
+    itemOptions: PropTypes.array.isRequired,
 };

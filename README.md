@@ -80,4 +80,11 @@ open an issue or message us.
 <3 Your friends at KnpUniversity
 ron_furgandy pumpup
 Ctrl Cmd Space emoji menu
--> cap 24]
+
+
+yarn add uuid --dev
+yarn add whatwg-fetch --dev
+yarn add promise-polyfill --dev
+yarn add babel-plugin-transform-object-rest-spread --dev
+composer require maker --dev
+php bin/console make:subscriber
